@@ -22,17 +22,7 @@ if errorlevel 1 goto failed
 copy /y "build\RGBSync.exe" "RGB Sync.exe" >nul
 echo BUILD OK>> build.log
 
-rem ---- put the project folder on the Desktop (works with OneDrive Desktops too) ----
-set "DESK="
-for /f "usebackq delims=" %%D in (`powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"`) do set "DESK=%%D"
 set "TARGET=%~dp0"
-if defined DESK (
-  if /i not "%~dp0"=="%DESK%\RGBSync\" (
-    robocopy "%~dp0." "%DESK%\RGBSync" /E /XD bin obj build /NFL /NDL /NJH /NJS /NP >nul
-    set "TARGET=%DESK%\RGBSync\"
-    echo COPIED TO %DESK%\RGBSync>> build.log
-  )
-)
 
 echo  Done!  "RGB Sync.exe" is ready in %TARGET%
 start "" "%TARGET%RGB Sync.exe"
