@@ -1,0 +1,14 @@
+# build output
+bin/
+obj/
+build/
+*.exe
+
+# local logs written by the app / build
+*.log
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo

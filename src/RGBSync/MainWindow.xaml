@@ -1,0 +1,521 @@
+<Window x:Class="RGBSync.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RGBSync.Controls"
+        Title="RGB Sync" Width="1280" Height="830" MinWidth="1120" MinHeight="660"
+        Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}" Icon="Assets/app.ico"
+        WindowStartupLocation="CenterScreen" FontFamily="{StaticResource Sans}"
+        TextOptions.TextFormattingMode="Ideal" UseLayoutRounding="True">
+
+    <Window.Resources>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,12,0,6"/>
+        </Style>
+        <Style x:Key="MonoSmall" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource Mono}"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="262"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ============ SIDEBAR ============ -->
+        <DockPanel Grid.Column="0" Margin="18,22,14,18" LastChildFill="False">
+
+            <Grid DockPanel.Dock="Top" Margin="6,0,0,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="Assets/app.ico" Width="30" Height="30" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="RGB Sync" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="pc + room lighting" Style="{StaticResource MonoSmall}" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock DockPanel.Dock="Top" Text="DEVICES" Style="{StaticResource SectionTitle}" Margin="8,0,0,10"/>
+
+            <RadioButton DockPanel.Dock="Top" x:Name="PcCard" GroupName="Nav" Style="{StaticResource DeviceCard}" IsChecked="True" Checked="Nav_Checked">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="38" Height="38">
+                        <Ellipse x:Name="PcSwatch" Fill="#F2F2EF"/>
+                        <TextBlock Text="&#xE7F4;" Style="{StaticResource Glyph}" Foreground="#D9000000"/>
+                    </Grid>
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="My PC" FontSize="14" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="PcCardStatus" Text="Not connected" Style="{StaticResource MonoSmall}" Margin="0,2,0,0"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <Ellipse Grid.Column="2" x:Name="PcDot" Width="7" Height="7" Fill="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="8,0,2,0"/>
+                </Grid>
+            </RadioButton>
+
+            <RadioButton DockPanel.Dock="Top" x:Name="RoomCard" GroupName="Nav" Style="{StaticResource DeviceCard}" Checked="Nav_Checked">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="38" Height="38">
+                        <Ellipse x:Name="RoomSwatch" Fill="#F2F2EF"/>
+                        <TextBlock Text="&#xEA80;" Style="{StaticResource Glyph}" Foreground="#D9000000"/>
+                    </Grid>
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="RoomCardName" Text="Room Light" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock x:Name="RoomCardStatus" Text="Not set up yet" Style="{StaticResource MonoSmall}" Margin="0,2,0,0"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <Ellipse Grid.Column="2" x:Name="RoomDot" Width="7" Height="7" Fill="{StaticResource MutedBrush}" VerticalAlignment="Center" Margin="8,0,2,0"/>
+                </Grid>
+            </RadioButton>
+
+            <RadioButton DockPanel.Dock="Top" x:Name="RingCard" GroupName="Nav" Style="{StaticResource DeviceCard}" Checked="Nav_Checked">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Ellipse x:Name="RingSwatch" Width="38" Height="38" StrokeThickness="6" Stroke="#F2F2EF" Fill="Transparent"/>
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Pump Ring" FontSize="14" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="RingCardStatus" Text="Follows My PC" Style="{StaticResource MonoSmall}" Margin="0,2,0,0"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </Grid>
+            </RadioButton>
+
+            <!-- bottom -->
+            <RadioButton DockPanel.Dock="Bottom" x:Name="SettingsCard" GroupName="Nav" Style="{StaticResource DeviceCard}" Margin="0" Checked="Nav_Checked">
+                <StackPanel Orientation="Horizontal" Margin="6,2,0,2">
+                    <TextBlock Text="&#xE713;" Style="{StaticResource Glyph}" FontSize="16" Foreground="{StaticResource MutedBrush}"/>
+                    <TextBlock Text="Settings" FontSize="14" FontWeight="Medium" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </RadioButton>
+
+            <Border DockPanel.Dock="Bottom" Background="{StaticResource PanelBrush}" CornerRadius="16" Padding="16,14" Margin="0,0,0,8"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Sync" FontSize="14" FontWeight="SemiBold"/>
+                        <TextBlock Text="room follows pc" Style="{StaticResource MonoSmall}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <ToggleButton Grid.Column="1" x:Name="SyncToggle" Style="{StaticResource Switch}" VerticalAlignment="Center"
+                                  Checked="SyncToggle_Changed" Unchecked="SyncToggle_Changed"/>
+                </Grid>
+            </Border>
+        </DockPanel>
+
+        <!-- ============ MAIN FRAME ============ -->
+        <Border Grid.Column="1" Margin="0,12,12,12" Background="{StaticResource FrameBrush}" CornerRadius="24"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" ClipToBounds="True">
+            <Grid>
+                <Rectangle Fill="{StaticResource GridBrush}" IsHitTestVisible="False"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                    <Grid Margin="34,30,30,24">
+
+                        <!-- ===== DEVICE PAGE ===== -->
+                        <StackPanel x:Name="DevicePage">
+                            <Grid Margin="0,0,0,22">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock x:Name="DeviceTitle" Text="My PC" FontSize="38" FontWeight="SemiBold"/>
+                                    <StackPanel Orientation="Horizontal" Margin="2,6,0,0">
+                                        <Ellipse x:Name="DeviceDot" Width="7" Height="7" Fill="{StaticResource MutedBrush}" Margin="0,0,9,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="DeviceStatusText" Text="Not connected" Style="{StaticResource MonoSmall}" FontSize="12"
+                                                   MaxWidth="560" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Button Grid.Column="1" x:Name="ConnectBtn" Content="Reconnect" VerticalAlignment="Center" Click="ConnectBtn_Click"/>
+                            </Grid>
+
+                            <Border x:Name="SyncBanner" Background="{StaticResource CardBrush}" BorderBrush="{StaticResource BorderStrongBrush}" BorderThickness="1"
+                                    CornerRadius="18" Padding="18,12" Margin="0,0,0,16" Visibility="Collapsed">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Width="7" Height="7" Fill="{StaticResource GoodBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="1" x:Name="BannerText" VerticalAlignment="Center" FontSize="13" Text="Following My PC"/>
+                                    <Button Grid.Column="2" x:Name="BannerButton" Content="Unsync" Style="{StaticResource AccentButton}" Margin="12,0,0,0"
+                                            Padding="14,6" Click="TurnOffSync_Click"/>
+                                </Grid>
+                            </Border>
+
+                            <Grid x:Name="DeviceControls">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="430"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- hero: live preview -->
+                                <Border Grid.Column="0" Style="{StaticResource Card}" VerticalAlignment="Top" Padding="18,20">
+                                    <StackPanel>
+                                        <Grid Height="360">
+                                            <Ellipse x:Name="RoomGlow" Width="230" Height="230" Visibility="Collapsed" Fill="#F2F2EF">
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect x:Name="RoomGlowShadow" BlurRadius="90" ShadowDepth="0" Opacity="0.9" Color="#F2F2EF"/>
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+                                            <controls:FanView x:Name="Fan" Width="340" Height="340"/>
+                                            <controls:StripView x:Name="Strip" Visibility="Collapsed"/>
+                                        </Grid>
+                                        <TextBlock x:Name="LedPreviewInfo" Style="{StaticResource MonoSmall}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+
+                                        <StackPanel x:Name="PaintTools" Margin="0,16,0,0" Visibility="Collapsed">
+                                            <WrapPanel HorizontalAlignment="Center">
+                                                <Button Content="Fill" Style="{StaticResource GhostButton}" Margin="0,0,6,8" Click="FillAll_Click"/>
+                                                <Button Content="Rainbow" Style="{StaticResource GhostButton}" Margin="0,0,6,8" Click="RainbowFill_Click"/>
+                                                <Button Content="Two-tone" Style="{StaticResource GhostButton}" Margin="0,0,0,8" Click="TwoTone_Click"/>
+                                            </WrapPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                                                <ToggleButton x:Name="SpinToggle" Style="{StaticResource Switch}" Checked="SpinToggle_Changed" Unchecked="SpinToggle_Changed"/>
+                                                <TextBlock Text="Spin" FontSize="13" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <StackPanel Grid.Column="2">
+                                    <!-- effects -->
+                                    <Border Style="{StaticResource Card}">
+                                        <StackPanel>
+                                            <TextBlock Text="EFFECT" Style="{StaticResource SectionTitle}"/>
+                                            <WrapPanel x:Name="EffectsPanel"/>
+                                            <TextBlock x:Name="EffectDesc" Visibility="Collapsed"/>
+
+                                            <Grid x:Name="SpeedRow" Margin="0,12,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="92"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock x:Name="SpeedLabel" Text="Speed" Foreground="{StaticResource MutedBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                                <Slider Grid.Column="1" x:Name="SpeedSlider" Minimum="0.2" Maximum="3" Value="1"
+                                                        IsMoveToPointEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
+                                            </Grid>
+
+                                            <StackPanel x:Name="MusicRow" Margin="0,14,0,0" Visibility="Collapsed">
+                                                <TextBlock x:Name="MusicStatus" Text="listening" Style="{StaticResource MonoSmall}"/>
+                                                <Border Height="4" CornerRadius="2" Background="#262625" Margin="0,10,0,0">
+                                                    <Border x:Name="MusicLevel" HorizontalAlignment="Left" Width="0" CornerRadius="2" Background="{StaticResource TextBrush}"/>
+                                                </Border>
+                                            </StackPanel>
+
+                                            <StackPanel x:Name="ClockRow" Margin="0,12,0,0" Visibility="Collapsed">
+                                                <Button Content="Clock setup" Style="{StaticResource GhostButton}" HorizontalAlignment="Left" Click="OpenClockSetup_Click"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- colour -->
+                                    <Border Style="{StaticResource Card}">
+                                        <StackPanel>
+                                            <TextBlock x:Name="ColourTitle" Text="COLOUR" Style="{StaticResource SectionTitle}"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="184"/>
+                                                    <ColumnDefinition Width="22"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <controls:ColorWheel x:Name="Wheel" Width="184" Height="184" VerticalAlignment="Top"/>
+                                                <StackPanel Grid.Column="2">
+                                                    <Grid>
+                                                        <TextBlock Text="Brightness" Foreground="{StaticResource MutedBrush}" FontSize="13"/>
+                                                        <TextBlock x:Name="BrightnessText" Text="100%" HorizontalAlignment="Right" Style="{StaticResource MonoSmall}" FontSize="12"/>
+                                                    </Grid>
+                                                    <Slider x:Name="BrightnessSlider" Minimum="0" Maximum="100" Value="100" Margin="0,6,0,0"
+                                                            IsMoveToPointEnabled="True" ValueChanged="BrightnessSlider_ValueChanged"/>
+                                                    <Grid Margin="0,16,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border x:Name="ColorPreview" Width="36" Height="36" CornerRadius="18" Background="#F2F2EF"/>
+                                                        <TextBox Grid.Column="1" x:Name="HexBox" Margin="10,0" Padding="8,7" Text="#F2F2EF" MaxLength="7" FontSize="12" FontFamily="{StaticResource Mono}" KeyDown="HexBox_KeyDown"/>
+                                                        <Button Grid.Column="2" Content="Apply" Padding="12,7" Click="HexApply_Click"/>
+                                                    </Grid>
+                                                    <Grid Margin="0,18,0,10">
+                                                        <TextBlock Text="SAVED" Style="{StaticResource MonoSmall}" VerticalAlignment="Center"/>
+                                                        <Button Content="+ Save" Style="{StaticResource GhostButton}" HorizontalAlignment="Right" Padding="10,4" Click="SaveColor_Click"
+                                                                ToolTip="Right-click a saved colour to remove it"/>
+                                                    </Grid>
+                                                    <WrapPanel x:Name="SwatchPanel"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- ===== SETTINGS PAGE ===== -->
+                        <StackPanel x:Name="SettingsPage" Visibility="Collapsed" MaxWidth="820" HorizontalAlignment="Left">
+                            <TextBlock Text="Settings" FontSize="38" FontWeight="SemiBold" Margin="0,0,0,24"/>
+
+                            <!-- OpenRGB -->
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="My PC" Style="{StaticResource CardTitle}"/>
+                                    <TextBlock Text="via OpenRGB" Style="{StaticResource MonoSmall}" Margin="0,0,0,6"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="110"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Host" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="OrgbHost"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="Port" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="OrgbPort"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <TextBlock Text="OpenRGB.exe" Style="{StaticResource Label}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="OrgbPath"/>
+                                        <Button Grid.Column="1" Content="Browse" Margin="8,0,0,0" Click="BrowseOpenRgb_Click"/>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                        <Button Content="Save &amp; connect" Style="{StaticResource AccentButton}" Click="OrgbConnect_Click"/>
+                                        <Button Content="Get OpenRGB" Margin="8,0,0,0" Click="DownloadOpenRgb_Click"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="OrgbStatus" Style="{StaticResource MonoSmall}" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Devices" Style="{StaticResource Label}" Margin="0,16,0,6"/>
+                                    <StackPanel x:Name="OrgbDevicesPanel"/>
+                                    <CheckBox x:Name="IdentifyCheck" Content="Identify headers" Margin="0,10,0,0"
+                                              Checked="Identify_Changed" Unchecked="Identify_Changed"/>
+                                    <TextBlock x:Name="IdentifyLegend" Style="{StaticResource Muted}" Margin="28,2,0,0" Visibility="Collapsed"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                        <TextBlock Text="LEDs per fan" VerticalAlignment="Center" FontSize="13"/>
+                                        <TextBox x:Name="FanLedsBox" Width="58" Margin="12,0,8,0" TextAlignment="Center" FontFamily="{StaticResource Mono}"/>
+                                        <Button Content="Set" Padding="14,6" Click="FanLedsSet_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Room light -->
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="Room light" Style="{StaticResource CardTitle}"/>
+                                    <TextBlock Text="tuya / calex · wi-fi" Style="{StaticResource MonoSmall}" Margin="0,0,0,14"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Find my strip" Style="{StaticResource AccentButton}" Click="FindStrip_Click"/>
+                                        <Button Content="Help" Margin="8,0,0,0" Click="RoomHelp_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                        <TextBlock Text="MAC" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource MutedBrush}"/>
+                                        <TextBox x:Name="RoomMacBox" Width="190" Margin="12,0,8,0" FontFamily="{StaticResource Mono}"/>
+                                        <Button Content="Deep search" Click="DeepSearch_Click"/>
+                                    </StackPanel>
+                                    <Border Background="{StaticResource PanelBrush}" CornerRadius="16" Padding="16,14" Margin="0,14,0,0"
+                                            BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                                        <StackPanel>
+                                            <TextBlock Text="GET LOCAL KEY · TUYA CLOUD" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox x:Name="CloudIdBox" ToolTip="Access ID"/>
+                                                <PasswordBox x:Name="CloudSecretBox" Grid.Column="2" ToolTip="Access Secret (not saved)"/>
+                                                <Button Grid.Column="3" Content="Get key" Style="{StaticResource AccentButton}" Margin="10,0,0,0" Click="GetKey_Click"/>
+                                            </Grid>
+                                            <Grid Margin="2,6,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="access id" Style="{StaticResource MonoSmall}"/>
+                                                <TextBlock Grid.Column="2" Text="access secret" Style="{StaticResource MonoSmall}"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock x:Name="ScanStatus" Style="{StaticResource MonoSmall}" Margin="0,10,0,0" TextWrapping="Wrap"/>
+                                    <StackPanel x:Name="ScanResults" Margin="0,4,0,0"/>
+                                    <CheckBox x:Name="RoomEnabledCheck" Content="Use the room light" Margin="0,14,0,0"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Name" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="RoomNameBox"/>
+                                            <TextBlock Text="IP address" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="RoomIpBox" FontFamily="{StaticResource Mono}"/>
+                                            <TextBlock Text="Protocol" Style="{StaticResource Label}"/>
+                                            <ComboBox x:Name="RoomVersionBox">
+                                                <ComboBoxItem Content="3.3"/>
+                                                <ComboBoxItem Content="3.4"/>
+                                                <ComboBoxItem Content="3.5"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="Device ID" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="RoomIdBox" FontFamily="{StaticResource Mono}"/>
+                                            <TextBlock Text="Local key" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="RoomKeyBox" FontFamily="{StaticResource Mono}"/>
+                                            <TextBlock Text="Colour format" Style="{StaticResource Label}"/>
+                                            <ComboBox x:Name="RoomProfileBox">
+                                                <ComboBoxItem Content="Standard"/>
+                                                <ComboBoxItem Content="Legacy"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,14,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Updates / sec" Foreground="{StaticResource MutedBrush}" FontSize="13" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                                        <Slider Grid.Column="1" x:Name="RoomFpsSlider" Minimum="2" Maximum="15" IsSnapToTickEnabled="True" TickFrequency="1"
+                                                VerticalAlignment="Center" ValueChanged="RoomFpsSlider_ValueChanged"/>
+                                        <TextBlock Grid.Column="2" x:Name="RoomFpsText" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource MonoSmall}" FontSize="12"/>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                        <Button Content="Save &amp; connect" Style="{StaticResource AccentButton}" Click="RoomConnect_Click"/>
+                                        <Button Content="Test" Margin="8,0,0,0" Click="RoomTest_Click"/>
+                                        <Button Content="Read status" Margin="8,0,0,0" Click="RoomReadStatus_Click"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="RoomStatusText" Style="{StaticResource MonoSmall}" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                    <TextBox x:Name="RoomRawStatus" IsReadOnly="True" Height="64" Margin="0,8,0,0" TextWrapping="Wrap"
+                                             FontFamily="{StaticResource Mono}" FontSize="11" VerticalScrollBarVisibility="Auto" Visibility="Collapsed"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Ring clock -->
+                            <Border x:Name="ClockCard" Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="Ring clock" Style="{StaticResource CardTitle}"/>
+                                    <TextBlock Text="deepcool pump ring" Style="{StaticResource MonoSmall}" Margin="0,0,0,14"/>
+
+                                    <TextBlock Text="LED FINDER" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox x:Name="FinderCheck" Content="Light LED #" VerticalAlignment="Center"
+                                                  Checked="Finder_Changed" Unchecked="Finder_Changed"/>
+                                        <Button Content="−" Width="38" Margin="12,0,0,0" Padding="0,6" Click="FinderMinus_Click"/>
+                                        <TextBox x:Name="FinderIndex" Width="64" Margin="6,0" Text="0" TextAlignment="Center" FontFamily="{StaticResource Mono}" TextChanged="FinderIndex_TextChanged"/>
+                                        <Button Content="+" Width="38" Padding="0,6" Click="FinderPlus_Click"/>
+                                        <Button Content="Use as start" Margin="12,0,0,0" Click="FinderUseStart_Click"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="FinderInfo" Style="{StaticResource MonoSmall}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                        <CheckBox x:Name="BlockCheck" Content="Block test, size" VerticalAlignment="Center"
+                                                  Checked="Block_Changed" Unchecked="Block_Changed"/>
+                                        <TextBox x:Name="BlockSizeBox" Width="54" Margin="10,0" Text="12" TextAlignment="Center" FontFamily="{StaticResource Mono}" TextChanged="BlockSize_TextChanged"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="BlockLegend" Style="{StaticResource Muted}" Margin="28,4,0,0" Visibility="Collapsed"/>
+
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="First LED" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockStartBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="LED count" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockCountBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4">
+                                            <TextBlock Text="12 o'clock LED" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockTopBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,4,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="12"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Hour" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockHourBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="Minute" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockMinuteBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4">
+                                            <TextBlock Text="Seconds" Style="{StaticResource Label}"/>
+                                            <TextBox x:Name="ClockSecondBox" FontFamily="{StaticResource Mono}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <WrapPanel Margin="0,12,0,0">
+                                        <CheckBox x:Name="ClockClockwiseCheck" Content="Clockwise" Margin="0,4,22,4"/>
+                                        <CheckBox x:Name="ClockSecondsCheck" Content="Seconds" Margin="0,4,22,4"/>
+                                        <CheckBox x:Name="RingSeparateCheck" Content="Separate from fans" Margin="0,4,0,4"/>
+                                    </WrapPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                        <Button Content="Save" Style="{StaticResource AccentButton}" Click="ClockSave_Click"/>
+                                        <Button Content="Save &amp; show clock" Margin="8,0,0,0" Click="ClockShow_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- App -->
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="App" Style="{StaticResource CardTitle}" Margin="0,0,0,10"/>
+                                    <CheckBox x:Name="StartWithWindowsCheck" Content="Start with Windows" Click="AppOptions_Click"/>
+                                    <CheckBox x:Name="StartMinimizedCheck" Content="Start in the tray" Click="AppOptions_Click"/>
+                                    <CheckBox x:Name="MinimizeToTrayCheck" Content="Keep running when closed" Click="AppOptions_Click"/>
+                                    <CheckBox x:Name="PcOffCheck" Content="Case lights off on shutdown / sleep" Click="AppOptions_Click"/>
+                                    <TextBlock x:Name="SettingsPathText" Style="{StaticResource MonoSmall}" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
